@@ -1,0 +1,64 @@
+services:
+  # Base de datos PostgreSQL 14
+  postgres:
+    image: postgres:14-alpine
+    container_name: challengeatm_postgres
+    restart: unless-stopped
+    environment:
+      # 🐘 CONFIGURACIÓN POSTGRESQL 
+      POSTGRES_DB: challengeapiatm
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432" 
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - atm-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d challengeapiatm"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API del ATM
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: challengeatm_api
+    restart: unless-stopped
+    environment:
+      # 🌍 CONFIGURACIÓN AMBIENTE 
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:3000
+      
+      # 🗃️ CONEXIÓN BASE DE DATOS 
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=challengeapiatm;Username=postgres;Password=postgres;Pooling=true;
+      
+      # 🔐 CONFIGURACIÓN JWT
+      - Jwt__SecretKey=AtmSecretKey2024!@#$$%^&*()_+1234567890SuperSecureKey
+      - Jwt__Issuer=ChallengeApiAtm
+      - Jwt__Audience=ChallengeApiAtm-Users
+      - Jwt__ExpirationInMinutes=60
+    ports:
+      - "3000:3000"  # 🌐 Puerto API - cambiar aquí para usar otro puerto
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - atm-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  atm-network:
+    driver: bridge 
