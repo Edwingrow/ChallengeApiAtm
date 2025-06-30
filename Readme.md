@@ -90,7 +90,22 @@ Jwt__ExpirationMinutes=60
    cd ChallengeApiAtm
    ```
 
-2. **Ejecutar con Docker Compose**
+2. **Configurar Variables de Entorno**
+  Base de datos está configurada para usar Docker, por lo que no es necesario configurar la cadena de conexión.
+  Para la variable de entorno ASPNETCORE_ENVIRONMENT, se puede usar el valor Development o Production.
+  Si se usa Development, se cargarán los datos de prueba.
+  Si se usa Production, no se cargarán los datos de prueba.
+  Actualmente se está usando el valor Development.
+  ```bash
+  ASPNETCORE_ENVIRONMENT=Development
+  ```
+  Para la variable de entorno Jwt__SecretKey, se puede usar el valor que se quiera.
+  Actualmente se está usando el valor AtmSecretKey2024!@#$%^&*()_+1234567890SuperSecureKey.
+  ```bash
+  Jwt__SecretKey=AtmSecretKey2024!@#$%^&*()_+1234567890SuperSecureKey
+  ```
+
+3. **Ejecutar con Docker Compose**
    ```bash
    docker-compose up --build -d
    ```
@@ -128,6 +143,54 @@ Jwt__ExpirationMinutes=60
    ```bash
    dotnet ef database update
    ```
+
+## 🗃️ Base de Datos
+
+### PostgreSQL con Snake Case
+- Usa la convención `snake_case` para nombres de tablas y columnas
+- Tablas: `users`, `accounts`, `cards`, `transactions`
+- Columnas: `first_name`, `last_name`, `account_id`, `card_id`, etc.
+
+### Inicialización Automática
+La aplicación maneja automáticamente la inicialización de la base de datos:
+
+#### 🔄 **Migraciones (Todos los Ambientes)**
+- Se aplican automáticamente al inicio de la aplicación
+- Funciona tanto en **Development** como en **Production**
+
+#### 📊 **Datos de Prueba (Solo Development)**
+Los datos de prueba se cargan **ÚNICAMENTE** en ambiente `Development`:
+
+**✅ Development (`ASPNETCORE_ENVIRONMENT=Development`)**
+- Aplica migraciones + carga datos de prueba
+- 4 usuarios, 4 cuentas, 4 tarjetas, 60 transacciones
+
+**❌ Production (`ASPNETCORE_ENVIRONMENT=Production`)**
+- Solo aplica migraciones
+- NO carga datos de prueba
+
+### Control de Ambiente
+Para cambiar el comportamiento, modifica la variable de ambiente:
+
+```bash
+# Development - con datos de prueba
+ASPNETCORE_ENVIRONMENT=Development
+
+# Production - sin datos de prueba  
+ASPNETCORE_ENVIRONMENT=Production
+```
+
+### Recrear Base de Datos
+Si quieres empezar desde cero:
+
+```bash
+# Eliminar todo (BD + volúmenes)
+docker-compose down -v
+
+# Recrear desde 0
+docker-compose up --build
+```
+
 
 ## 📚 Documentación de la API
 
@@ -678,52 +741,7 @@ docker-compose logs api | grep "ERROR"
 
 ---
 
-## 🗃️ Base de Datos
 
-### PostgreSQL con Snake Case
-- Usa la convención `snake_case` para nombres de tablas y columnas
-- Tablas: `users`, `accounts`, `cards`, `transactions`
-- Columnas: `first_name`, `last_name`, `account_id`, `card_id`, etc.
-
-### Inicialización Automática
-La aplicación maneja automáticamente la inicialización de la base de datos:
-
-#### 🔄 **Migraciones (Todos los Ambientes)**
-- Se aplican automáticamente al inicio de la aplicación
-- Funciona tanto en **Development** como en **Production**
-
-#### 📊 **Datos de Prueba (Solo Development)**
-Los datos de prueba se cargan **ÚNICAMENTE** en ambiente `Development`:
-
-**✅ Development (`ASPNETCORE_ENVIRONMENT=Development`)**
-- Aplica migraciones + carga datos de prueba
-- 4 usuarios, 4 cuentas, 4 tarjetas, 60 transacciones
-
-**❌ Production (`ASPNETCORE_ENVIRONMENT=Production`)**
-- Solo aplica migraciones
-- NO carga datos de prueba
-
-### Control de Ambiente
-Para cambiar el comportamiento, modifica la variable de ambiente:
-
-```bash
-# Development - con datos de prueba
-ASPNETCORE_ENVIRONMENT=Development
-
-# Production - sin datos de prueba  
-ASPNETCORE_ENVIRONMENT=Production
-```
-
-### Recrear Base de Datos
-Si quieres empezar desde cero:
-
-```bash
-# Eliminar todo (BD + volúmenes)
-docker-compose down -v
-
-# Recrear desde 0
-docker-compose up --build
-```
 
 ## 👨‍💻 Autor
 
