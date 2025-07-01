@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
     environment:
       # 🌍 CONFIGURACIÓN AMBIENTE 
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:3000
       
       # 🗃️ CONEXIÓN BASE DE DATOS 
