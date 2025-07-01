@@ -30,10 +30,11 @@ public sealed class RegisterRequest
     /// </summary>
     public string Pin { get; set; } = string.Empty;
     /// <summary>
+    /// Confirmación del PIN de la tarjeta
+    /// </summary>
+    public string ConfirmPin { get; set; } = string.Empty;
+    /// <summary>
     /// Saldo inicial de la cuenta
     /// </summary>
     public decimal InitialBalance { get; set; } = 0;
-
-
-
 }
