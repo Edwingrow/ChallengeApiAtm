@@ -42,7 +42,6 @@ public sealed class AuthController : ControllerBase
         return Ok(new
         {
             success = true,
-            timestamp = DateTime.UtcNow,
             data = response,
             message = "Autenticación exitosa"
         });
@@ -65,7 +64,6 @@ public sealed class AuthController : ControllerBase
         return Ok(new
         {
             success = true,
-            timestamp = DateTime.UtcNow,
             data = response,
         });
     }

@@ -49,7 +49,6 @@ public sealed class AccountController : ControllerBase
         return Ok(new
         {
             success = true,
-            timestamp = DateTime.UtcNow,
             data = response,
             message = "Consulta de saldo realizada exitosamente"
         });
@@ -81,7 +80,6 @@ public sealed class AccountController : ControllerBase
         return Ok(new
         {
             success = true,
-            timestamp = DateTime.UtcNow,
             data = response,
             message = $"Retiro de ${request.Amount:F2} realizado exitosamente"
         });
@@ -114,9 +112,7 @@ public sealed class AccountController : ControllerBase
         return Ok(new
         {
             success = true,
-            timestamp = DateTime.UtcNow,
-            data = response,
-            message = "Historial de operaciones obtenido exitosamente"
+            data = response
         });
     }
 

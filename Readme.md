@@ -212,10 +212,10 @@ La aplicación crea automáticamente datos de prueba al iniciar:
 
 ```
 👤 Usuario: Edwin Garcia (Documento: 96069288)
-💳 Tarjeta: 400123456789010
-🔢 PIN: 8033
-🏦 Cuenta: 1000000001
-💰 Saldo inicial: $1,000.00
+💳 Tarjeta: 4001234567890101
+🔢 PIN: 803
+🏦 Cuenta: 1420284881
+💰 Saldo inicial: $1,000,000.00
 ```
 
 ## 🛡️ Endpoints de la API
@@ -250,7 +250,6 @@ http://localhost:3000/api
 ```json
 {
   "success": true,
-  "timestamp": "2025-06-30T12:23:06.0023284Z",
   "data": {
     "userId": "f43d62fb-380c-4655-9d19-a10a89ec0a65",
     "accountNumber": "2028586839",
@@ -261,8 +260,7 @@ http://localhost:3000/api
     "expiryDate": "12/2026",
     "registrationDate": "2025-06-30T12:23:06.0017721Z",
     "message": "Usuario registrado exitosamente"
-  },
-  "message": "Usuario registrado exitosamente"
+  }
 }
 ```
 
@@ -303,7 +301,6 @@ curl -X 'POST' \
 ```json
 {
   "success": true,
-  "timestamp": "2025-06-30T12:26:56.3040252Z",
   "data": {
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNDNkNjJmYi0zODBjLTQ2NTUtOWQxOS1hMTBhODllYzBhNjUiLCJqdGkiOiJjOWFlNmZlMi1mZDMxLTQxMTgtOGFkMi0zMDU3NjBlNjFlMTEiLCJpYXQiOjE3NTEyODY0MTYsImNhcmRfbnVtYmVyIjoiNDExMTExMTExMTExMTExMSIsImFjY291bnRfbnVtYmVyIjoiMjAyODU4NjgzOSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiZjQzZDYyZmItMzgwYy00NjU1LTlkMTktYTEwYTg5ZWMwYTY1IiwiZXhwIjoxNzUxMjkwMDE2LCJpc3MiOiJDaGFsbGVuZ2VBcGlBdG0iLCJhdWQiOiJDaGFsbGVuZ2VBcGlBdG0tVXNlcnMifQ.icYM0Krrpvg8F6POn4gRIq4ptxEA1uNmlOyiwhmubVA",
     "tokenType": "Bearer",
@@ -355,7 +352,6 @@ Content-Type: application/json
 ```json
 {
   "success": true,
-  "timestamp": "2025-06-30T12:28:14.016078Z",
   "data": {
     "userName": "Edwin Garcia",
     "accountNumber": "2028586839",
@@ -405,7 +401,6 @@ Content-Type: application/json
 ```json
 {
   "success": true,
-  "timestamp": "2025-06-30T12:28:54.1958291Z",
   "data": {
     "transactionId": "e221e7b5-ca41-45d4-b93d-cef086ef2b34",
     "withdrawnAmount": 500000,
@@ -461,7 +456,6 @@ pageSize: 10
 ```json
 {
   "success": true,
-  "timestamp": "2025-06-30T12:29:57.0695528Z",
   "data": {
     "transactions": [
       {
@@ -499,7 +493,6 @@ pageSize: 10
       "currentBalance": 500000
     }
   },
-  "message": "Historial de operaciones obtenido exitosamente"
 }
 ```
 
@@ -540,7 +533,6 @@ Content-Type: application/json
 ```json
 {
   "success": true,
-  "timestamp": "2025-06-30T13:09:00.2614373Z",
   "data": {
     "cardNumber": "****-****-****-1111",
     "cardHolderName": "Edwin Garcia",

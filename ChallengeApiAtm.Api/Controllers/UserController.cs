@@ -41,9 +41,7 @@ public sealed class UserController : ControllerBase
         return CreatedAtAction(nameof(Register), new
         {
             success = true,
-            timestamp = DateTime.UtcNow,
-            data = response,
-            message = "Usuario registrado exitosamente"
+            data = response
         });
     }
 

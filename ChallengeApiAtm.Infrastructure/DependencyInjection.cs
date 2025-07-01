@@ -135,80 +135,84 @@ public static class DependencyInjection
 
         var transactions = new List<Domain.Entities.Transaction>();
         var random = new Random(12345);
-        var startDate = DateTime.UtcNow.AddDays(-30);
+        var startDate = DateTime.UtcNow.AddDays(-60);
 
-        var balanceInquiries = 0;
-        var withdrawals = 0;
+        var totalBalanceInquiries = 0;
+        var totalWithdrawals = 0;
+        var transactionsPerUser = new int[users.Length];
 
-        for (int i = 0; i < 60; i++)
+        for (int userIndex = 0; userIndex < users.Length; userIndex++)
         {
-            var accountIndex = random.Next(0, accounts.Length);
-            var account = accounts[accountIndex];
-            var card = cards[accountIndex];
-            var user = users[accountIndex];
+            var account = accounts[userIndex];
+            var card = cards[userIndex];
+            var user = users[userIndex];
+            
+            var userTransactionCount = 40 + random.Next(0, 11);
+            transactionsPerUser[userIndex] = userTransactionCount;
 
-            var transactionDate = startDate.AddDays(random.Next(0, 30))
-                                           .AddHours(random.Next(8, 20))
-                                           .AddMinutes(random.Next(0, 60));
-
-            var transactionTypeRoll = random.Next(1, 101);
-            Domain.Enums.TransactionType transactionType;
-            decimal amount;
-            string description;
-            var status = Domain.Enums.TransactionStatus.Completed;
-
-            if (transactionTypeRoll <= 60) // 60% Consultas de saldo
+            for (int i = 0; i < userTransactionCount; i++)
             {
-                transactionType = Domain.Enums.TransactionType.BalanceInquiry;
-                amount = 0.00m;
-                description = "Consulta de saldo";
-                balanceInquiries++;
-            }
-            else // 40% Retiros
-            {
-                transactionType = Domain.Enums.TransactionType.Withdrawal;
-                var withdrawAmounts = new[] { 50000m, 100000m, 200000m, 500000m, 1000000m };
-                amount = withdrawAmounts[random.Next(withdrawAmounts.Length)];
-                
-                // 5% de probabilidad de retiro fallido por fondos insuficientes
-                if (random.Next(1, 101) <= 5)
+                var transactionDate = startDate.AddDays(random.Next(0, 60))
+                                               .AddHours(random.Next(8, 22))
+                                               .AddMinutes(random.Next(0, 60))
+                                               .AddSeconds(random.Next(0, 60));
+
+                var transactionTypeRoll = random.Next(1, 101);
+                Domain.Enums.TransactionType transactionType;
+                decimal amount;
+                string description;
+                var status = Domain.Enums.TransactionStatus.Completed;
+
+                if (transactionTypeRoll <= 70)
                 {
-                    status = Domain.Enums.TransactionStatus.Failed;
-                    description = "Retiro ATM - Rechazado: Fondos insuficientes";
+                    transactionType = Domain.Enums.TransactionType.BalanceInquiry;
+                    amount = 0.00m;
+                    description = "Consulta de Saldo";
+                    totalBalanceInquiries++;
                 }
                 else
                 {
-                    description = "Retiro ATM - Confirmado";
+                    transactionType = Domain.Enums.TransactionType.Withdrawal;
+                    var withdrawAmounts = new[] { 20000m, 50000m, 100000m, 200000m, 300000m, 500000m };
+                    amount = withdrawAmounts[random.Next(withdrawAmounts.Length)];
+                    
+                    if (random.Next(1, 101) <= 8)
+                    {
+                        status = Domain.Enums.TransactionStatus.Failed;
+                        description = "Retiro ATM - Rechazado: Fondos insuficientes";
+                    }
+                    else
+                    {
+                        description ="Retiro ATM - Confirmado";
+                    }
+                    totalWithdrawals++;
                 }
-                withdrawals++;
-            }
 
-            // Calcular balance después de transacción (simulado)
-            decimal? balanceAfterTransaction = null;
-            if (transactionType != Domain.Enums.TransactionType.BalanceInquiry && status == Domain.Enums.TransactionStatus.Completed)
-            {
-                var currentBalance = account.Balance;
-                balanceAfterTransaction = transactionType switch
+                decimal? balanceAfterTransaction = null;
+                if (transactionType != Domain.Enums.TransactionType.BalanceInquiry && status == Domain.Enums.TransactionStatus.Completed)
                 {
-                    Domain.Enums.TransactionType.Withdrawal => Math.Max(0, currentBalance - amount),
-                    _ => currentBalance
-                };
+                    var currentBalance = account.Balance;
+                    balanceAfterTransaction = transactionType switch
+                    {
+                        Domain.Enums.TransactionType.Withdrawal => Math.Max(0, currentBalance - amount),
+                        _ => currentBalance
+                    };
+                }
+
+                var transaction = new Domain.Entities.Transaction(
+                    accountId: account.Id,
+                    cardId: card.Id,
+                    type: transactionType,
+                    amount: amount,
+                    description: description
+                );
+
+                typeof(Domain.Entities.Transaction).GetProperty("Status")?.SetValue(transaction, status);
+                typeof(Domain.Entities.Transaction).GetProperty("CreatedAt")?.SetValue(transaction, transactionDate);
+                typeof(Domain.Entities.Transaction).GetProperty("BalanceAfterTransaction")?.SetValue(transaction, balanceAfterTransaction);
+
+                transactions.Add(transaction);
             }
-
-            var transaction = new Domain.Entities.Transaction(
-                accountId: account.Id,
-                cardId: card.Id,
-                type: transactionType,
-                amount: amount,
-                description: description
-            );
-
-            // Configurar propiedades adicionales usando reflection (ya que el constructor es básico)
-            typeof(Domain.Entities.Transaction).GetProperty("Status")?.SetValue(transaction, status);
-            typeof(Domain.Entities.Transaction).GetProperty("CreatedAt")?.SetValue(transaction, transactionDate);
-            typeof(Domain.Entities.Transaction).GetProperty("BalanceAfterTransaction")?.SetValue(transaction, balanceAfterTransaction);
-
-            transactions.Add(transaction);
         }
 
         // Ordenar por fecha para mayor realismo
@@ -222,11 +226,19 @@ public static class DependencyInjection
         Console.WriteLine($"   👥 Usuarios: {users.Length}");
         Console.WriteLine($"   🏦 Cuentas: {accounts.Length}");
         Console.WriteLine($"   💳 Tarjetas: {cards.Length}");
-        Console.WriteLine($"   💸 Transacciones: {transactions.Count}");
+        Console.WriteLine($"   💸 Transacciones totales: {transactions.Count}");
         Console.WriteLine();
         Console.WriteLine("📈 Distribución de transacciones:");
-        Console.WriteLine($"   🔍 Consultas de saldo: {balanceInquiries}");
-        Console.WriteLine($"   💰 Retiros: {withdrawals}");
+        Console.WriteLine($"   🔍 Consultas de saldo: {totalBalanceInquiries}");
+        Console.WriteLine($"   💰 Retiros: {totalWithdrawals}");
+        Console.WriteLine();
+        Console.WriteLine("📊 Transacciones por usuario:");
+        for (int i = 0; i < users.Length; i++)
+        {
+            var userTransactions = transactions.Count(t => t.AccountId == accounts[i].Id);
+            var userPages = Math.Ceiling((double)userTransactions / 10);
+            Console.WriteLine($"   {users[i].FirstName}: {userTransactions} transacciones ({userPages} páginas)");
+        }
         Console.WriteLine();
         Console.WriteLine("👤 Usuarios de prueba:");
         for (int i = 0; i < users.Length; i++)
@@ -234,16 +246,19 @@ public static class DependencyInjection
             Console.WriteLine($"   {users[i].FirstName} {users[i].LastName}:");
             Console.WriteLine($"     📄 Documento: {users[i].DocumentNumber}");
             Console.WriteLine($"     💳 Tarjeta: {cards[i].CardNumber}");
-            Console.WriteLine($"     🔢 PIN: {(i == 0 ? "8033" : i == 1 ? "1234" : i == 2 ? "5678" : "9999")}");
+            Console.WriteLine($"     🔢 PIN: {(i == 0 ? "8033" : i == 1 ? "123" : i == 2 ? "567" : "2075")}");
             Console.WriteLine($"     🏦 Cuenta: {accounts[i].AccountNumber}");
             Console.WriteLine($"     💰 Saldo: ${accounts[i].Balance:N2}");
+            Console.WriteLine($"     📄 Transacciones: {transactionsPerUser[i]} (≈{Math.Ceiling((double)transactionsPerUser[i] / 10)} páginas)");
             Console.WriteLine();
         }
 
-        Console.WriteLine("🎯 Usuario principal para pruebas:");
-        Console.WriteLine($"   Tarjeta: {cards[0].CardNumber}");
-        Console.WriteLine($"   PIN: 8033");
-        Console.WriteLine($"   Transacciones disponibles: {transactions.Count(t => t.AccountId == accounts[0].Id)}");
+        Console.WriteLine("🎯 Usuario principal para pruebas (Edwin Garcia):");
+        Console.WriteLine($"   📄 Documento: {users[0].DocumentNumber}");
+        Console.WriteLine($"   💳 Tarjeta: {cards[0].CardNumber}");
+        Console.WriteLine($"   🔢 PIN: 8033");
+        Console.WriteLine($"   📊 Transacciones: {transactions.Count(t => t.AccountId == accounts[0].Id)} (≈{Math.Ceiling((double)transactions.Count(t => t.AccountId == accounts[0].Id) / 10)} páginas)");
+        Console.WriteLine($"   💰 Saldo: ${accounts[0].Balance:N2}");
     }
 
     public static async Task<bool> IsDatabaseAvailableAsync(this IServiceProvider serviceProvider)
