@@ -24,6 +24,9 @@ public class Transaction
         if (string.IsNullOrWhiteSpace(description))
             throw new ArgumentException("La descripción es requerida", nameof(description));
 
+        if (type == TransactionType.Withdrawal && amount <= 0)
+            throw new ArgumentException("Los retiros deben tener monto positivo", nameof(amount));
+
         Id = Guid.NewGuid();
         AccountId = accountId;
         CardId = cardId;
@@ -47,7 +50,9 @@ public class Transaction
 
         if (string.IsNullOrWhiteSpace(description))
             throw new ArgumentException("La descripción es requerida", nameof(description));
-
+            
+        if (type == TransactionType.Withdrawal && amount <= 0)
+            throw new ArgumentException("Los retiros deben tener monto positivo", nameof(amount));
         Id = Guid.NewGuid();
         AccountId = accountId;
         CardId = cardId;
@@ -104,5 +109,5 @@ public class Transaction
     /// Tarjeta asociada a la transacción
     /// </summary>
     public virtual Card? Card { get; private set; }
-    
+
 }

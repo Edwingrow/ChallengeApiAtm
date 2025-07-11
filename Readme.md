@@ -733,7 +733,32 @@ docker-compose logs api | grep "ERROR"
 
 ---
 
+## 🧪 Pruebas (Testing)
 
+El proyecto tiene una alta cobertura de pruebas, separadas en dos proyectos principales:
+
+- **`ChallengeApiAtm.UnitTests`**: Pruebas unitarias para la lógica de negocio, servicios y entidades del dominio.
+- **`ChallengeApiAtm.ApiTests`**: Pruebas de integración y End-to-End (E2E) que levantan la API en memoria para probar los endpoints y flujos de usuario completos.
+
+### Ejecutar Todas las Pruebas
+
+Para ejecutar todos los tests (unitarios y de API) de la solución, usa el siguiente comando desde la raíz del proyecto:
+
+```bash
+dotnet test
+```
+
+### Ejecutar Pruebas por Proyecto
+
+Puedes ejecutar los tests de un proyecto específico:
+
+```bash
+# Ejecutar solo pruebas unitarias
+dotnet test ChallengeApiAtm.UnitTests
+
+# Ejecutar solo pruebas de API y E2E
+dotnet test ChallengeApiAtm.ApiTests
+```
 
 ## 👨‍💻 Autor
 

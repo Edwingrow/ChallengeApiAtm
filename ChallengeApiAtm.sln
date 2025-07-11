@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChallengeApiAtm.Api", "Chal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChallengeApiAtm.UnitTests", "ChallengeApiAtm.UnitTests\ChallengeApiAtm.UnitTests.csproj", "{4C6EA3E1-EA1C-4C78-875A-255A960F3401}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChallengeApiAtm.IntegrationTests", "ChallengeApiAtm.IntegrationTests\ChallengeApiAtm.IntegrationTests.csproj", "{142BEC91-9E7F-472A-8DE4-EF5776D85C3B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChallengeApiAtm.ApiTests", "ChallengeApiAtm.ApiTests\ChallengeApiAtm.ApiTests.csproj", "{2C601CB6-5C74-4CB3-8C60-71A5336C434C}"
 EndProject
 Global
@@ -87,18 +85,6 @@ Global
 		{4C6EA3E1-EA1C-4C78-875A-255A960F3401}.Release|x64.Build.0 = Release|Any CPU
 		{4C6EA3E1-EA1C-4C78-875A-255A960F3401}.Release|x86.ActiveCfg = Release|Any CPU
 		{4C6EA3E1-EA1C-4C78-875A-255A960F3401}.Release|x86.Build.0 = Release|Any CPU
-		{142BEC91-9E7F-472A-8DE4-EF5776D85C3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{142BEC91-9E7F-472A-8DE4-EF5776D85C3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{142BEC91-9E7F-472A-8DE4-EF5776D85C3B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{142BEC91-9E7F-472A-8DE4-EF5776D85C3B}.Debug|x64.Build.0 = Debug|Any CPU
-		{142BEC91-9E7F-472A-8DE4-EF5776D85C3B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{142BEC91-9E7F-472A-8DE4-EF5776D85C3B}.Debug|x86.Build.0 = Debug|Any CPU
-		{142BEC91-9E7F-472A-8DE4-EF5776D85C3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{142BEC91-9E7F-472A-8DE4-EF5776D85C3B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{142BEC91-9E7F-472A-8DE4-EF5776D85C3B}.Release|x64.ActiveCfg = Release|Any CPU
-		{142BEC91-9E7F-472A-8DE4-EF5776D85C3B}.Release|x64.Build.0 = Release|Any CPU
-		{142BEC91-9E7F-472A-8DE4-EF5776D85C3B}.Release|x86.ActiveCfg = Release|Any CPU
-		{142BEC91-9E7F-472A-8DE4-EF5776D85C3B}.Release|x86.Build.0 = Release|Any CPU
 		{2C601CB6-5C74-4CB3-8C60-71A5336C434C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2C601CB6-5C74-4CB3-8C60-71A5336C434C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C601CB6-5C74-4CB3-8C60-71A5336C434C}.Debug|x64.ActiveCfg = Debug|Any CPU
